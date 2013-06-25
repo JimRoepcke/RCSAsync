@@ -19,7 +19,7 @@
             dispatch_async(queue, block);
         };
     }
-    return [[result copy] autorelease];
+    return result;
 }
 
 + (RCSFailureBlock)failureBlock:(RCSFailureBlock)failureBlock onQueue:(dispatch_queue_t)queue
@@ -33,7 +33,7 @@
             });
         };
     }
-    return [[result copy] autorelease];
+    return result;
 }
 
 + (void)dispatch:(dispatch_block_t)block toQueue:(dispatch_queue_t)queue

@@ -14,7 +14,7 @@
 
 @interface RCSIndexSetIteration : RCSIteration
 
-+ (instancetype)iterationWithIndexes:(NSIndexSet *)indexes toQueue: (dispatch_queue_t)queue;
++ (instancetype)iterationWithIndexes:(NSIndexSet *)indexes toQueue:(dispatch_queue_t)queue;
 
 // designated initializer
 - (id)initWithIndexes:(NSIndexSet *)indexes toQueue:(dispatch_queue_t)queue;

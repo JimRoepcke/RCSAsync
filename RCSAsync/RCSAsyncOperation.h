@@ -22,14 +22,14 @@
  */
 @interface RCSAsyncOperation : NSOperation
 
-@property (nonatomic, copy) dispatch_block_t executionBlock;
+@property (nonatomic, copy) void (^executionBlock)(RCSAsyncOperation *operation);
 @property (nonatomic, assign) dispatch_queue_t queue;
 
 + (instancetype)execute:(void (^)(RCSAsyncOperation *operation))block; // onQueue:dispatch_get_main_queue()
 + (instancetype)execute:(void (^)(RCSAsyncOperation *operation))block onQueue:(dispatch_queue_t)queue;
 
 // designated initializer
-- (id)initWithExecutionBlock:(dispatch_block_t)executionBlock onQueue:(dispatch_queue_t)queue;
+- (id)initWithExecutionBlock:(void (^)(RCSAsyncOperation *operation))executionBlock onQueue:(dispatch_queue_t)queue;
 
 - (void)done;
 

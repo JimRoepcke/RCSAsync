@@ -9,6 +9,17 @@
 #import "RCSIteration.h"
 
 @implementation RCSIteration
+{
+    dispatch_queue_t _queue;
+}
+
+- (void)dealloc
+{
+    if (_queue)
+    {
+        dispatch_release(_queue); _queue = NULL;
+    }
+}
 
 - (id)initToQueue:(dispatch_queue_t)queue
 {
@@ -19,15 +30,6 @@
         dispatch_retain(_queue);
     }
     return self;
-}
-
-- (void)dealloc
-{
-    if (_queue)
-    {
-        dispatch_release(_queue); _queue = NULL;
-    }
-    [super dealloc];
 }
 
 - (instancetype)next:(RCSIterationContext *)context

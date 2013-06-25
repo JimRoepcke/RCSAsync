@@ -9,6 +9,16 @@
 #import "RCSIndexSetIterationContext.h"
 #import "RCSIndexSetIteration.h"
 
+@interface RCSIndexSetIterationContext ()
+
+@property (nonatomic, readwrite, strong) RCSIndexSetIteration *iteration;
+@property (nonatomic, readwrite, assign) NSUInteger idx;
+@property (nonatomic, readwrite, copy) RCSIndexSetIterationEachBlock eachBlock;
+@property (nonatomic, readwrite, copy) RCSIndexSetIterationCompletionBlock completionBlock;
+@property (nonatomic, readwrite, copy) RCSIndexSetIterationFailureBlock failureBlock;
+
+@end
+
 @implementation RCSIndexSetIterationContext
 
 @dynamic iteration; // inherit ivar from superclass
@@ -16,14 +26,6 @@
 - (RCSIndexSetIteration *)iteration
 {
     return (RCSIndexSetIteration *)[super iteration];
-}
-
-- (void)dealloc
-{
-    [_eachBlock release]; _eachBlock = nil;
-    [_completionBlock release]; _completionBlock = nil;
-    [_failureBlock release]; _failureBlock = nil;
-    [super dealloc];
 }
 
 + (instancetype)contextFor:(RCSIndexSetIteration *)iteration
@@ -40,9 +42,9 @@
 {
     RCSIndexSetIterationContext *result = [self contextFor:iteration index:index length:length isFirst:first isLast:last isStopped:stopped error:error];
     result->_idx = idx;
-    result->_eachBlock = Block_copy(eachBlock);
-    result->_completionBlock = Block_copy(completionBlock);
-    result->_failureBlock = Block_copy(failureBlock);
+    result.eachBlock = eachBlock;
+    result.completionBlock = completionBlock;
+    result.failureBlock = failureBlock;
     return result;
 }
 
@@ -50,9 +52,9 @@
 {
     RCSIndexSetIterationContext *nextContext = [self nextContext];
     nextContext->_idx = nextIndex;
-    nextContext->_eachBlock = [self.eachBlock retain];
-    nextContext->_completionBlock = [self.completionBlock retain];
-    nextContext->_failureBlock = [self.failureBlock retain];
+    nextContext.eachBlock = self.eachBlock;
+    nextContext.completionBlock = self.completionBlock;
+    nextContext.failureBlock = self.failureBlock;
     return nextContext;
 }
 

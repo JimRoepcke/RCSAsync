@@ -14,12 +14,6 @@
     NSIndexSet *_indexes;
 }
 
-- (void)dealloc
-{
-    [_indexes release]; _indexes = nil;
-    [super dealloc];
-}
-
 - (id)initWithIndexes:(NSIndexSet *)indexes toQueue:(dispatch_queue_t)queue
 {
     self = [super initToQueue:queue];
@@ -32,7 +26,7 @@
 
 + (instancetype)iterationWithIndexes:(NSIndexSet *)indexes toQueue: (dispatch_queue_t)queue
 {
-    return [[[[self class] alloc] initWithIndexes:indexes toQueue:queue] autorelease];
+    return [[[self class] alloc] initWithIndexes:indexes toQueue:queue];
 }
 
 - (instancetype)eachIndex:(RCSIndexSetIterationEachBlock)eachBlock

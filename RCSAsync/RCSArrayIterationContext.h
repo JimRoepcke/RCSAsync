@@ -16,8 +16,8 @@
 // the iteration doesn't retain the context, rather, the other way around
 // this way the iteration doesn't have to be retained throughout the process,
 // meaning there's no cleanup for it, and there's no retain loop
-@property (nonatomic, readonly, retain) RCSArrayIteration *iteration;
-@property (nonatomic, readonly, assign) id object;
+@property (nonatomic, readonly, strong) RCSArrayIteration *iteration;
+@property (nonatomic, readonly, weak) id object;
 @property (nonatomic, readonly, copy) RCSArrayIterationEachBlock eachBlock;
 @property (nonatomic, readonly, copy) RCSArrayIterationCompletionBlock completionBlock;
 @property (nonatomic, readonly, copy) RCSArrayIterationFailureBlock failureBlock;

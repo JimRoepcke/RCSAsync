@@ -9,14 +9,19 @@
 #import "RCSIterationContext.h"
 #import "RCSIteration.h"
 
-@implementation RCSIterationContext
+@interface RCSIterationContext ()
 
-- (void)dealloc
-{
-    [_iteration release]; _iteration = nil;
-    [_error release]; _error = nil;
-    [super dealloc];
-}
+@property (nonatomic, readwrite, strong) RCSIteration *iteration;
+@property (nonatomic, readwrite, assign) NSUInteger index;
+@property (nonatomic, readwrite, assign) NSUInteger length;
+@property (nonatomic, readwrite, assign, getter = isFirst) BOOL first;
+@property (nonatomic, readwrite, assign, getter = isLast) BOOL last;
+@property (nonatomic, readwrite, assign, getter = isStopped)  BOOL stopped;
+@property (nonatomic, readwrite, strong) NSError *error;
+
+@end
+
+@implementation RCSIterationContext
 
 - (instancetype)next
 {
@@ -47,27 +52,27 @@
                  isStopped:(BOOL)stopped
                      error:(NSError *)error
 {
-    RCSIterationContext *result = [[[self alloc] init] autorelease];
-    result->_iteration = [iteration retain];
-    result->_index = index;
-    result->_length = length;
-    result->_first = first;
-    result->_last = last;
-    result->_stopped = stopped;
-    result->_error = [error retain];
+    RCSIterationContext *result = [[self alloc] init];
+    result.iteration = iteration;
+    result.index = index;
+    result.length = length;
+    result.first = first;
+    result.last = last;
+    result.stopped = stopped;
+    result.error = error;
     return result;
 }
 
 - (instancetype)nextContext
 {
-    RCSIterationContext *nextContext = [[[[self class] alloc] init] autorelease];
-    nextContext->_iteration = [self.iteration retain];
-    nextContext->_index = self.index + 1;
-    nextContext->_length = self.length;
-    nextContext->_first = NO;
-    nextContext->_last = self.index + 2 == self.length;
-    nextContext->_stopped = NO;
-    nextContext->_error = nil;
+    RCSIterationContext *nextContext = [[[self class] alloc] init];
+    nextContext.iteration = self.iteration;
+    nextContext.index = self.index + 1;
+    nextContext.length = self.length;
+    nextContext.first = NO;
+    nextContext.last = self.index + 2 == self.length;
+    nextContext.stopped = NO;
+    nextContext.error = nil;
     return nextContext;
 }
 

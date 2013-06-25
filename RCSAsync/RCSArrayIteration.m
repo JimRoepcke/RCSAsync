@@ -14,12 +14,6 @@
     NSArray *_objects;
 }
 
-- (void)dealloc
-{
-    [_objects release]; _objects = nil;
-    [super dealloc];
-}
-
 - (id)initWithObjects:(NSArray *)objects toQueue:(dispatch_queue_t)queue
 {
     self = [super initToQueue:queue];
@@ -32,7 +26,7 @@
 
 + (instancetype)iterationWithObjects:(NSArray *)objects toQueue: (dispatch_queue_t)queue
 {
-    return [[[[self class] alloc] initWithObjects:objects toQueue:queue] autorelease];
+    return [[[self class] alloc] initWithObjects:objects toQueue:queue];
 }
 
 - (instancetype)eachObject:(RCSArrayIterationEachBlock)eachBlock

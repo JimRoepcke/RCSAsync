@@ -16,7 +16,7 @@
 // the iteration doesn't retain the context, rather, the other way around
 // this way the iteration doesn't have to be retained throughout the process,
 // meaning there's no cleanup for it, and there's no retain loop
-@property (nonatomic, readonly, retain) RCSIndexSetIteration *iteration;
+@property (nonatomic, readonly, strong) RCSIndexSetIteration *iteration;
 @property (nonatomic, readonly, assign) NSUInteger idx;
 @property (nonatomic, readonly, copy) RCSIndexSetIterationEachBlock eachBlock;
 @property (nonatomic, readonly, copy) RCSIndexSetIterationCompletionBlock completionBlock;

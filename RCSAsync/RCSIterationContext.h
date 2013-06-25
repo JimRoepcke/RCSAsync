@@ -16,13 +16,13 @@
 // the iteration doesn't retain the context, rather, the other way around
 // this way the iteration doesn't have to be retained throughout the process,
 // meaning there's no cleanup for it, and there's no retain loop
-@property (nonatomic, readonly, retain) RCSIteration *iteration;
+@property (nonatomic, readonly, strong) RCSIteration *iteration;
 @property (nonatomic, readonly, assign) NSUInteger index;
 @property (nonatomic, readonly, assign) NSUInteger length;
 @property (nonatomic, readonly, assign, getter = isFirst) BOOL first;
 @property (nonatomic, readonly, assign, getter = isLast) BOOL last;
 @property (nonatomic, readonly, assign, getter = isStopped)  BOOL stopped;
-@property (nonatomic, readonly, retain) NSError *error;
+@property (nonatomic, readonly, strong) NSError *error;
 
 - (instancetype)next;
 - (instancetype)stop;

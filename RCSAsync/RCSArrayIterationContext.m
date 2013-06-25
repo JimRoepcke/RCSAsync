@@ -8,6 +8,16 @@
 
 #import "RCSArrayIterationContext.h"
 
+@interface RCSArrayIterationContext ()
+
+@property (nonatomic, readwrite, strong) RCSArrayIteration *iteration;
+@property (nonatomic, readwrite, weak) id object;
+@property (nonatomic, readwrite, copy) RCSArrayIterationEachBlock eachBlock;
+@property (nonatomic, readwrite, copy) RCSArrayIterationCompletionBlock completionBlock;
+@property (nonatomic, readwrite, copy) RCSArrayIterationFailureBlock failureBlock;
+
+@end
+
 @implementation RCSArrayIterationContext
 
 @dynamic iteration; // inherit ivar from superclass
@@ -15,15 +25,6 @@
 - (RCSArrayIteration *)iteration
 {
     return (RCSArrayIteration *)[super iteration];
-}
-
-- (void)dealloc
-{
-    [_object release]; _object = nil;
-    [_eachBlock release]; _eachBlock = nil;
-    [_completionBlock release]; _completionBlock = nil;
-    [_failureBlock release]; _failureBlock = nil;
-    [super dealloc];
 }
 
 + (instancetype)contextFor:(RCSArrayIteration *)iteration
@@ -39,20 +40,20 @@
               failureBlock:(RCSArrayIterationFailureBlock)failureBlock
 {
     RCSArrayIterationContext *result = [self contextFor:iteration index:index length:length isFirst:first isLast:last isStopped:stopped error:error];
-    result->_object = [object retain];
-    result->_eachBlock = Block_copy(eachBlock);
-    result->_completionBlock = Block_copy(completionBlock);
-    result->_failureBlock = Block_copy(failureBlock);
+    result.object = object;
+    result.eachBlock = eachBlock;
+    result.completionBlock = completionBlock;
+    result.failureBlock = failureBlock;
     return result;
 }
 
 - (instancetype)nextContextWithObject:(id)nextObject
 {
     RCSArrayIterationContext *nextContext = [self nextContext];
-    nextContext->_object = [nextObject retain];
-    nextContext->_eachBlock = [self.eachBlock retain];
-    nextContext->_completionBlock = [self.completionBlock retain];
-    nextContext->_failureBlock = [self.failureBlock retain];
+    nextContext.object = nextObject;
+    nextContext.eachBlock = self.eachBlock;
+    nextContext.completionBlock = self.completionBlock;
+    nextContext.failureBlock = self.failureBlock;
     return nextContext;
 }
 

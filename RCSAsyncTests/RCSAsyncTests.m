@@ -11,6 +11,8 @@
 #import "RCSIndexSetIteration.h"
 #import "RCSArrayIteration.h"
 #import "RCSAsyncOperation.h"
+#import "RCSIndexSetIterationContext.h"
+#import "RCSArrayIterationContext.h"
 
 @implementation RCSAsyncTests
 {
@@ -97,17 +99,17 @@
     NSOperationQueue *queue = [[NSOperationQueue alloc] init];
     [queue setMaxConcurrentOperationCount:1];
 
-    __block RCSAsyncOperation *operation1 = [[[RCSAsyncOperation alloc] init] autorelease];
+    RCSAsyncOperation *operation1 = [[RCSAsyncOperation alloc] init];
     __block BOOL operation1Executed = NO;
-    operation1.executionBlock = ^{
-        [operation1 done];
+    operation1.executionBlock = ^(RCSAsyncOperation *op) {
+        [op done];
         operation1Executed = YES;
     };
 
-    __block RCSAsyncOperation *operation2 = [[[RCSAsyncOperation alloc] init] autorelease];
+    RCSAsyncOperation *operation2 = [[RCSAsyncOperation alloc] init];
     __block BOOL operation2Executed = NO;
-    operation2.executionBlock = ^{
-        [operation2 done];
+    operation2.executionBlock = ^(RCSAsyncOperation *op) {
+        [op done];
         operation2Executed = YES;
     };
 
@@ -124,7 +126,6 @@
         NSLog(@"%@ is polling...", NSStringFromSelector(_cmd));
     }
 
-    [queue release];
     STAssertTrue(operation1Executed, @"operation1Executed");
     STAssertTrue(operation2Executed, @"operation1Executed");
     STAssertTrue(_isDone, @"operation1Executed");

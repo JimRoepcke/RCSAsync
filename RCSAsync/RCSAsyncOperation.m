@@ -12,40 +12,29 @@
 {
     BOOL _executing; // for concurrent NSOperation
     BOOL _finished; // for concurrent NSOperation
-    dispatch_block_t _executionBlock;
-    dispatch_queue_t _queue;
-}
-
-@synthesize executionBlock = _executionBlock;
-@synthesize queue = _queue;
-
-- (void)dealloc
-{
-    [_executionBlock release]; _executionBlock = nil;
-    dispatch_release(_queue); _queue = NULL;
-    [super dealloc];
 }
 
 + (instancetype)execute:(void (^)(RCSAsyncOperation *operation))block
 {
-    __block RCSAsyncOperation *result = [[[[self class] alloc] init] autorelease];
-    result.executionBlock = ^{
-        block(result);
-    };
+    RCSAsyncOperation *result = [[[self class] alloc] initWithExecutionBlock:block onQueue:NULL];
     return result;
 }
 
 + (instancetype)execute:(void (^)(RCSAsyncOperation *operation))block onQueue:(dispatch_queue_t)queue
 {
-    __block RCSAsyncOperation *result = [[[[self class] alloc] init] autorelease];
-    result.executionBlock = ^{
-        block(result);
-    };
-    result.queue = queue;
+    RCSAsyncOperation *result = [[[self class] alloc] initWithExecutionBlock:block onQueue:queue];
     return result;
 }
 
-- (id)initWithExecutionBlock:(dispatch_block_t)executionBlock onQueue:(dispatch_queue_t)queue
+- (void)dealloc
+{
+    if (_queue)
+    {
+        dispatch_release(_queue); _queue = NULL;
+    }
+}
+
+- (id)initWithExecutionBlock:(void (^)(RCSAsyncOperation *operation))executionBlock onQueue:(dispatch_queue_t)queue
 {
     self = [super init];
     if (self)
@@ -74,15 +63,21 @@
 
 - (void)setQueue:(dispatch_queue_t)queue
 {
-    if (queue == nil)
+    if (!queue)
     {
         queue = [self defaultQueue];
     }
     if (_queue != queue)
     {
-        dispatch_release(_queue);
-        dispatch_retain(queue);
-        queue = _queue;
+        if (_queue)
+        {
+            dispatch_release(_queue);
+        }
+        if (queue)
+        {
+            dispatch_retain(queue);
+        }
+        _queue = queue;
     }
 }
 
@@ -113,7 +108,9 @@
 {
     if (self.queue && self.executionBlock)
     {
-        dispatch_async(self.queue, self.executionBlock);
+        dispatch_async(self.queue, ^{
+            self.executionBlock(self);
+        });
     }
     else
     {
