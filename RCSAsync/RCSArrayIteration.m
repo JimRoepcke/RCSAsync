@@ -55,7 +55,7 @@
         }
         else
         {
-            // TODO: @throw an exception?
+            @throw [NSException exceptionWithName:NSInvalidArgumentException reason:@"called eachObject:done:failed: with a nil eachBlock" userInfo:nil];
         }
     }
     else
@@ -76,8 +76,7 @@
 {
     if (context.stopped)
     {
-        // FIXME: @throw?
-        NSLog(@"called next on a stopped iteration");
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"called next: on a stopped array iteration" userInfo:nil];
     }
     else
     {
