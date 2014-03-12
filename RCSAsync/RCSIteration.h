@@ -11,7 +11,7 @@
 
 @interface RCSIteration : NSObject
 
-@property (nonatomic, readonly, assign) dispatch_queue_t queue;
+@property (nonatomic, readonly, strong) dispatch_queue_t queue;
 
 - (id)initToQueue:(dispatch_queue_t)queue;
 

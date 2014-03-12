@@ -13,21 +13,12 @@
     dispatch_queue_t _queue;
 }
 
-- (void)dealloc
-{
-    if (_queue)
-    {
-        dispatch_release(_queue); _queue = NULL;
-    }
-}
-
 - (id)initToQueue:(dispatch_queue_t)queue
 {
     self = [super init];
     if (self)
     {
         _queue = queue ? queue : dispatch_get_main_queue();
-        dispatch_retain(_queue);
     }
     return self;
 }

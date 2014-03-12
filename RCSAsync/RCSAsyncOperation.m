@@ -26,14 +26,6 @@
     return result;
 }
 
-- (void)dealloc
-{
-    if (_queue)
-    {
-        dispatch_release(_queue); _queue = NULL;
-    }
-}
-
 - (id)initWithExecutionBlock:(void (^)(RCSAsyncOperation *operation))executionBlock onQueue:(dispatch_queue_t)queue
 {
     self = [super init];
@@ -45,7 +37,6 @@
             queue = [self defaultQueue];
         }
         _queue = queue;
-        dispatch_retain(_queue);
     }
     return self;
 }
@@ -69,14 +60,6 @@
     }
     if (_queue != queue)
     {
-        if (_queue)
-        {
-            dispatch_release(_queue);
-        }
-        if (queue)
-        {
-            dispatch_retain(queue);
-        }
         _queue = queue;
     }
 }

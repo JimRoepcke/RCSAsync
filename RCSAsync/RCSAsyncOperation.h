@@ -23,7 +23,7 @@
 @interface RCSAsyncOperation : NSOperation
 
 @property (nonatomic, copy) void (^executionBlock)(RCSAsyncOperation *operation);
-@property (nonatomic, assign) dispatch_queue_t queue;
+@property (nonatomic, strong) dispatch_queue_t queue;
 
 + (instancetype)execute:(void (^)(RCSAsyncOperation *operation))block; // onQueue:dispatch_get_main_queue()
 + (instancetype)execute:(void (^)(RCSAsyncOperation *operation))block onQueue:(dispatch_queue_t)queue;
